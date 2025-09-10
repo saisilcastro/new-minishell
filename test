@@ -1,0 +1,43 @@
+#!/bin/bash
+
+echo "Hello, World!"
+echo -n "Hello, World!"
+echo "Hello" " " "World!"
+echo -n "Hello" " " "World!"
+echo
+echo -n
+echo $HOME
+echo "O meu PATH é: $PATH"
+echo "O valor de \$? é: $?"
+echo "O valor do USER é: "$USER" e do SHELL é: "$SHELL"
+
+cd ..
+cd /
+cd ~
+cd
+cd -
+cd /pasta_inexistente
+cd /usr/bin/make
+
+pwd
+
+env
+
+export VAR=123
+export VAR2="hello world"
+export VAR3
+export
+export VAR=456
+export VAR_SEM_NOME
+export 1VAR=1
+export VAR_TESTE="Olá, mundo" OUTRA_VAR="Testando"
+
+unset VAR
+unset VAR2
+unset VAR_INEXISTENTE
+unset VAR VAR2 VAR3
+unset 1VAR
+
+exit
+exit 1
+exit 256

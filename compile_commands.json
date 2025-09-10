@@ -1,0 +1,15 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-c",
+      "-I./include",
+      "-o",
+      "obj/variable.o",
+      "src/variable.c"
+    ],
+    "directory": "/mnt/a/cloud/programming/mister-coder/primary/c/source/logic/minishell",
+    "file": "/mnt/a/cloud/programming/mister-coder/primary/c/source/logic/minishell/src/variable.c",
+    "output": "/mnt/a/cloud/programming/mister-coder/primary/c/source/logic/minishell/obj/variable.o"
+  }
+]

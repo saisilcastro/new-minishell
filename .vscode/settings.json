@@ -1,0 +1,10 @@
+{
+	"files.associations": {
+		"type_traits": "c",
+		"typeinfo": "c",
+		"command.h": "c",
+		"stdio.h": "c",
+		"variable.h": "c",
+		"stdlib.h": "c"
+	}
+}
