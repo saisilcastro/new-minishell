@@ -18,6 +18,7 @@ struct command_s{
 extern command_t *command_push(char *value, status_e is_expandable);
 extern void	command_next_first(command_t **root, command_t *next);
 extern void command_next_last(command_t **root, command_t *next);
+extern variable_t	*command_select_by_name(variable_t *var, char *line);
 extern void	command_break(command_t **cmd, char *line, char byte);
 extern status_e	command_parse(minishell_t *set, char *line);
 extern void	command_expand(command_t *line, variable_t *var);

@@ -2,7 +2,7 @@ NAME = minishell
 VPATH = src: ./src src: ./src/builtin src: ./src/command src: ./src/variable
 OBJ = obj
 BUILTIN = echo.c cd.c pwd.c export.c unset.c env.c exit.c
-COMMAND = command.c command-break.c command-parse.c command-expand.c
+COMMAND = command.c command-select.c command-break.c command-parse.c command-expand.c
 VARIABLE = variable.c variable-change.c variable-tree.c variable-show.c variable-pop.c
 SRC = 	main.c minishell.c minishell-signal.c minishell-execute.c minishell-pop.c $(COMMAND) \
 		util.c $(VARIABLE) $(BUILTIN)
@@ -27,3 +27,7 @@ fclean: clean
 re: fclean all
 leak:
 	@valgrind --leak-check=full -q ./$(NAME) -fanalyzer e -fsanitize=address
+push:
+	git add .
+	git commit -m ${NAME}
+	git push

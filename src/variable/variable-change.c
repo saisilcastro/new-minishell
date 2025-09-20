@@ -7,6 +7,9 @@ void         variable_change(variable_t **root, char *name, char *value) {
 	to_change = variable_select(*root, name);
 	if (to_change) {
 		free(to_change->value);
-		to_change->value = strdup(value);
+		if (value)
+			to_change->value = strdup(value);
+		else
+			to_change->value = NULL;
 	}
 }

@@ -1,39 +1,26 @@
 #include <command.h>
 #include <minishell.h>
 
-static inline variable_t	*command_name_search(variable_t *var, char *line) {
-	variable_t	*to_expand;
-	char		*name;
-	size_t		size;
-
-	size = 0;
-	while (*(line + size) && !has_space(*(line + size)))
-		size++;
-	if (!(name = malloc(size + 1 * sizeof(char))))
-		return NULL;
-	strncpy(name, line, size);
-	*(name + size) = '\0';
-	to_expand = variable_select(var, name);
-	free(name);
-	return to_expand;
-}
-
 static inline char	*command_line(variable_t *found, char *line, size_t begin) {
 	char	*new_line;
 	char	*pointer;
 	size_t	pos;
 	size_t	size;
-
-	if (!found || !found->name || !found->value || !line)
+	size_t	value_len;
+	
+	if (!found || !found->name || !line)
 		return NULL;
-	size = strlen(line) + strlen(found->value) - strlen(found->name);
+	value_len = 0;
+	if (found->value)
+		value_len = strlen(found->value);
+	size = strlen(line) + value_len - strlen(found->name);
 	if (!(new_line = malloc(size * sizeof(char))))
 		return NULL;
 	pointer = new_line;
 	memcpy(pointer, line, begin);
 	pointer += begin;
-	memcpy(pointer, found->value, strlen(found->value));
-	pointer += strlen(found->value);
+	memcpy(pointer, found->value, value_len);
+	pointer += value_len;
 	pos = begin + 1 + strlen(found->name);
 	memcpy(pointer, line + pos, strlen(line) - pos);
 	pointer += strlen(line) - pos;
@@ -75,13 +62,13 @@ static inline void	command_process(command_t **cmd, variable_t *var) {
 	line = (*cmd)->value;
 	while (*line) {
 		if (*line == '$') {
-			found = command_name_search(var, line + 1);
+			found = command_select_by_name(var, line + 1);
 			if (found) {
 				new_line = command_line(found, (*cmd)->value, line - (*cmd)->value);
 				free((*cmd)->value);
 				(*cmd)->value = new_line;
 				line = (*cmd)->value;
-				continue ;
+				continue;
 			}
 			new_line = command_blank((*cmd)->value, line);
 			free((*cmd)->value);

@@ -10,7 +10,8 @@ void	echo(minishell_t *set) {
 	new_line = On;
 	command_t	*cmd = set->cmd->next;
 	while (cmd) {
-		printf("%s%c", cmd->value, cmd->next ? ' ' : new_line ? '\n' : '\0');
+		if (cmd->value && *cmd->value)
+			printf("%s%c", cmd->value, cmd->next ? ' ' : new_line ? '\n' : '\0');
 		cmd = cmd->next;
 	}
 }
