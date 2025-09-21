@@ -38,8 +38,8 @@ void	export(minishell_t *set) {
 				variable_next_last(&set->var, variable_push(var->value, value));
 			else
 				variable_change(&set->var, var->value, value);
+			command_pop(&var);
 		}
 		cmd = cmd->next;
 	}
-	command_pop(&var);
 }

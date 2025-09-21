@@ -3,7 +3,7 @@
 void	echo(minishell_t *set) {
 	status_e	new_line;
 
-	if (!set->cmd->next) {
+	if (!set->cmd->next || !*(set->cmd->next->value)) {
 		printf("\n");
 		return ;
 	}

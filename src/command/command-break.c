@@ -19,6 +19,8 @@ void    command_break(command_t **cmd, char *line, char byte) {
 			command_next_last(cmd, command_push(value, Off));
 			free(value);
 			begin = (cur - line) + 1;
+			if (*cur == byte && begin >= size)
+				command_next_last(cmd, command_push("", Off));
 			if (!*cur || begin >= size)
 				break;
 		}

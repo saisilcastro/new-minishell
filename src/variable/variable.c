@@ -27,18 +27,20 @@ void    variable_next_first(variable_t **root, variable_t *next) {
 	*root = next;
 }
 
-void    variable_next_last(variable_t **root, variable_t *next) {
+void variable_next_last(variable_t **root, variable_t *next) {
+    variable_t	*cur;
+
 	if (!*root) {
-		*root = next;
-		return;
-	}
-	variable_t	*cur = *root, *left = NULL;
-	while (cur->right) {
-		left = cur->left;
-		cur = cur->right;
-	}
-	cur->right = next;
-	cur->left = left;
+        *root = next;
+        return;
+    }
+
+    cur = *root;
+    while (cur->right) 
+        cur = cur->right;
+
+    cur->right = next;
+    next->left = cur;
 }
 
 variable_t   *variable_select(variable_t *var, char *name) {

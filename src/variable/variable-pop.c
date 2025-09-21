@@ -1,27 +1,26 @@
 #include <variable.h>
 
-void	variable_remove(variable_t **root, variable_t *to_remove) {
+void variable_remove(variable_t **root, variable_t *to_remove) {
 	if (!root || !*root || !to_remove)
-        return;
+		return;
 
-    // Caso 1: O nó a ser removido é o primeiro (cabeça) da lista
-    if (to_remove->left == NULL)
-        *root = to_remove->right;
-    else {
-        // Caso 2: O nó a ser removido está no meio ou no fim
-        to_remove->left->right = to_remove->right;
-    }
+	if (*root == to_remove) {
+		*root = to_remove->right;
+		if (*root)
+			(*root)->left = NULL;
+	} else {
+		if (to_remove->left)
+			to_remove->left->right = to_remove->right;
+		if (to_remove->right)
+			to_remove->right->left = to_remove->left;
+	}
 
-    // Se o nó removido não for o último, atualiza o ponteiro 'left' do próximo nó
-    if (to_remove->right != NULL)
-        to_remove->right->left = to_remove->left;
-
-    // Libera a memória alocada para o nome, valor e o próprio nó
-    if (to_remove->name)
-        free(to_remove->name);
-    if (to_remove->value)
-        free(to_remove->value);
-    free(to_remove);
+	if (to_remove->name)
+		free(to_remove->name);
+	if (to_remove->value)
+		free(to_remove->value);
+	free(to_remove);
+	to_remove = NULL;
 }
 
 void variable_pop_one(void *data) {

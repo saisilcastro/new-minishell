@@ -1,7 +1,7 @@
 #include <command.h>
 #include <minishell.h>
 
-static inline char	*command_line(variable_t *found, char *line, size_t begin) {
+static inline char	*name_2_value(variable_t *found, char *line, size_t begin) {
 	char	*new_line;
 	char	*pointer;
 	size_t	pos;
@@ -28,7 +28,7 @@ static inline char	*command_line(variable_t *found, char *line, size_t begin) {
 	return new_line;
 }
 
-static inline char	*command_blank(char *line, char *pos) {
+static inline char	*name_2_blank(char *line, char *pos) {
 	char	*new_line;
 	char	*pointer;
 	size_t	begin;
@@ -53,6 +53,12 @@ static inline char	*command_blank(char *line, char *pos) {
 	return new_line;
 }
 
+static inline char *forward_line(command_t **cmd, char *line) {
+	free((*cmd)->value);
+	(*cmd)->value = line;
+	return (*cmd)->value;
+}
+
 static inline void	command_process(command_t **cmd, variable_t *var) {
 	variable_t	*found;
 	char		*name;
@@ -63,27 +69,34 @@ static inline void	command_process(command_t **cmd, variable_t *var) {
 	while (*line) {
 		if (*line == '$') {
 			found = command_select_by_name(var, line + 1);
-			if (found) {
-				new_line = command_line(found, (*cmd)->value, line - (*cmd)->value);
-				free((*cmd)->value);
-				(*cmd)->value = new_line;
-				line = (*cmd)->value;
-				continue;
+			if (found)
+				line = forward_line(cmd, name_2_value(found, (*cmd)->value, line - (*cmd)->value));
+			else {
+				if (*(line + 1) != '?')
+					line = forward_line(cmd, name_2_blank((*cmd)->value, line));
+				else {
+					line++;
+					break;
+				}
 			}
-			new_line = command_blank((*cmd)->value, line);
-			free((*cmd)->value);
-			(*cmd)->value = new_line;
-			line = (*cmd)->value;
 			continue ;
 		}
 		line++;
 	}
 }
 
-void	command_expand(command_t *cmd, variable_t *var) {
-	while (cmd) {
-		if (cmd->is_expandable)
-			command_process(&cmd, var);
-		cmd = cmd->next;
+void	command_expand(command_t **cmd, variable_t *var) {
+	command_t	*cur;
+	command_t	*next;
+
+	cur = *cmd;
+	while (cur) {
+		next = cur->next;
+		if (cur->is_expandable) {
+			command_process(&cur, var);
+			if (!*cur->value) 
+				command_remove(cmd, cur);
+		}
+		cur = next;
 	}
 }

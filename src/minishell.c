@@ -56,9 +56,8 @@ void minishell_loop(minishell_t *set) {
 		if (is_command_empty(&line))
 			continue;
 		add_history(line);
-		if (command_parse(set, line)) {
-			command_expand(set->cmd, set->var);
-		}
+		if (command_parse(set, line))
+			command_expand(&set->cmd, set->var);
 		if (line && *line)
 			free(line);
 		minishell_execute(set);

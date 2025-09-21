@@ -32,23 +32,3 @@ void    command_next_last(command_t **root, command_t *set) {
     set->prev = cur;
     cur->next = set;
 }
-
-void command_pop_one(command_t **cmd) {
-		return;
-	if ((*cmd)->value)
-		free((*cmd)->value);
-	free(*cmd);
-	*cmd = NULL;
-}
-
-void command_pop(command_t **root) {
-	command_t	*next;
-
-	while (*root) {
-		next = (*root)->next;
-		if ((*root)->value)
-			free((*root)->value);
-		free(*root);
-		*root = next;
-	}
-}
