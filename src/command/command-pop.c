@@ -1,5 +1,23 @@
 #include <command.h>
 
+void command_pop_to_next(command_t **cmd) {
+	command_t	*next;
+	status_e	next_command;
+
+	next_command = Off;
+	while (!next_command && *cmd) {
+		next = (*cmd)->next;
+		//printf("{%s}%s", (*cmd)->value, special_checker(*(*cmd)->value) ? "\n" : " ");
+		if (special_checker(*(*cmd)->value) && (special_checker((*(*cmd)->value + 1)) || ((*(*cmd)->value + 1) == '\0')))
+			next_command = On;
+		if ((*cmd)->value)
+			free((*cmd)->value);
+		free(*cmd);
+		*cmd = next;
+	}
+
+}
+
 void command_remove(command_t **cmd, command_t *to_remove) {
 	if (!cmd || !*cmd || !to_remove)
 		return;

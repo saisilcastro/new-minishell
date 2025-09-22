@@ -72,12 +72,11 @@ static inline void	command_process(command_t **cmd, variable_t *var) {
 			if (found)
 				line = forward_line(cmd, name_2_value(found, (*cmd)->value, line - (*cmd)->value));
 			else {
-				if (*(line + 1) != '?')
-					line = forward_line(cmd, name_2_blank((*cmd)->value, line));
-				else {
+				if (*(line + 1) == '?') {
 					line++;
 					break;
 				}
+				line = forward_line(cmd, name_2_blank((*cmd)->value, line));
 			}
 			continue ;
 		}

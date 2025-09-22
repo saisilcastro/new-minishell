@@ -1,7 +1,7 @@
 #include <command.h>
 #include <minishell.h>
 
-static inline command_t	*condition_command(char **line, char *buffer, int *pos) {
+static inline command_t	*command_condition(char **line, char *buffer, int *pos) {
 	if (special_checker(*(*line + 1)) == 2) {
 		memcpy(buffer, *line, 2);
 		*line += 2;
@@ -16,7 +16,7 @@ static inline command_t	*condition_command(char **line, char *buffer, int *pos) 
 	return NULL;
 }
 
-static inline int	comma_command(command_t **command, char **line, char *buffer, int *pos) {
+static inline int	command_comma(command_t **command, char **line, char *buffer, int *pos) {
 	status_e	is_expandable;
 
 	*(*line)++;
@@ -35,7 +35,7 @@ static inline int	comma_command(command_t **command, char **line, char *buffer, 
 	return -1;
 }
 
-static command_t	*normal_command(char **line, char *buffer, int *pos) {
+static command_t	*command_normal(char **line, char *buffer, int *pos) {
 	while (*(*line)) {
 		*(buffer + (*pos)++) = *(*line)++;
 		if (has_space(*(*line)))
@@ -56,14 +56,14 @@ static inline command_t *command_extract(char **line) {
 	while (*(*line)) {
 		switch (special_checker(*(*line))) {
 			case 1:
-				if (!comma_command(&command, line, buffer, &pos))
+				if (!command_comma(&command, line, buffer, &pos))
 					continue;
 			break;
 			case 2:
-				return condition_command(line, buffer, &pos);
+				return command_condition(line, buffer, &pos);
 			break;
 			default:
-				return normal_command(line, buffer, &pos);
+				return command_normal(line, buffer, &pos);
 		}
 	}
 	return command;

@@ -23,6 +23,7 @@ extern void	command_break(command_t **cmd, char *line, char byte);
 extern status_e	command_parse(minishell_t *set, char *line);
 extern void	command_expand(command_t **line, variable_t *var);
 extern void	command_show(command_t *cmd);
+extern void command_pop_to_next(command_t **cmd);
 extern void command_remove(command_t **cmd, command_t *to_remove);
 extern void command_pop_one(command_t **cmd);
 extern void command_pop(command_t **root);

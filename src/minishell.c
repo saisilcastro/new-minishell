@@ -51,17 +51,18 @@ status_e is_command_empty(char **value) {
 void minishell_loop(minishell_t *set) {
 	char *line;
 	while (set->run) {
-		signal(SIGINT, shell_ctrl_c);
+		//signal(SIGINT, shell_ctrl_c);
 		line = readline("> ");
 		if (is_command_empty(&line))
 			continue;
 		add_history(line);
-		if (command_parse(set, line))
-			command_expand(&set->cmd, set->var);
+		if (command_parse(set, line)) {
+			//command_expand(&set->cmd, set->var);
+		}
 		if (line && *line)
 			free(line);
 		minishell_execute(set);
-		command_pop(&set->cmd);
+		command_pop_to_next(&set->cmd);
 	}
 	minishell_pop(set);
 }
