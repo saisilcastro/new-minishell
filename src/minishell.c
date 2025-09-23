@@ -61,8 +61,10 @@ void minishell_loop(minishell_t *set) {
 		command_parse(set, line);
 		if (line && *line)
 			free(line);
-		minishell_execute(set);
-		command_pop_to_next(&set->cmd);
+		while (set->cmd) {
+			minishell_execute(set);
+			command_pop_to_next(&set->cmd);
+		}
 	}
 	minishell_pop(set);
 }
