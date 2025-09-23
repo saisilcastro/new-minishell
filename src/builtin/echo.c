@@ -9,9 +9,13 @@ void	echo(minishell_t *set) {
 	}
 	new_line = On;
 	command_t	*cmd = set->cmd->next;
-	while (cmd) {
-		if (cmd->value && *cmd->value)
-			printf("%s%c", cmd->value, cmd->next ? ' ' : new_line ? '\n' : '\0');
+	while (cmd && !special_checker(*cmd->value)) {
+		if (cmd->value && *cmd->value) {
+			if (cmd->next)
+				printf("%s%c\n", cmd->value, ' ');
+			else
+				printf("%s%c\n", cmd->value, '\n');
+		}
 		cmd = cmd->next;
 	}
 }

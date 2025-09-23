@@ -50,15 +50,15 @@ status_e is_command_empty(char **value) {
 
 void minishell_loop(minishell_t *set) {
 	char *line;
+
+	set->cmd = NULL;
 	while (set->run) {
 		//signal(SIGINT, shell_ctrl_c);
 		line = readline("> ");
 		if (is_command_empty(&line))
 			continue;
 		add_history(line);
-		if (command_parse(set, line)) {
-			//command_expand(&set->cmd, set->var);
-		}
+		command_parse(set, line);
 		if (line && *line)
 			free(line);
 		minishell_execute(set);

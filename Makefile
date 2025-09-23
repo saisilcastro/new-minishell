@@ -2,8 +2,8 @@ NAME = minishell
 VPATH = src: ./src src: ./src/builtin src: ./src/command src: ./src/variable
 OBJ = obj
 BUILTIN = echo.c cd.c pwd.c export.c unset.c env.c exit.c
-COMMAND = command.c command-select.c command-break.c command-parse.c command-expand.c command-pop.c
-VARIABLE = variable.c variable-change.c variable-tree.c variable-show.c variable-pop.c
+COMMAND = command.c command-select.c command-break.c command-apostrophe.c command-quote.c command-normal.c command-parse.c command-pop.c
+VARIABLE = variable.c variable-property.c variable-change.c variable-tree.c variable-show.c variable-pop.c
 SRC = 	main.c minishell.c minishell-signal.c minishell-execute.c minishell-pop.c $(COMMAND) \
 		util.c $(VARIABLE) $(BUILTIN)
 INCLUDE = -I./include

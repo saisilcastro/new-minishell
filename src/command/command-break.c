@@ -16,11 +16,11 @@ void    command_break(command_t **cmd, char *line, char byte) {
 			if (!(value = calloc(len + 1, sizeof(char))))
 				break;
 			memcpy(value, line + begin, len);
-			command_next_last(cmd, command_push(value, Off));
+			command_next_last(cmd, command_push(value));
 			free(value);
 			begin = (cur - line) + 1;
 			if (*cur == byte && begin >= size)
-				command_next_last(cmd, command_push("", Off));
+				command_next_last(cmd, command_push(""));
 			if (!*cur || begin >= size)
 				break;
 		}
