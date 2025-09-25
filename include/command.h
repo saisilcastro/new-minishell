@@ -24,6 +24,7 @@ extern void			command_expand(command_t **line, variable_t *var);
 extern int			command_apostrophe(char **line, char **value);
 extern int			command_quote(char **line, char **value);
 extern int			command_normal(char **line, char **value);
+extern int			command_special(char **line, char **value);
 extern void			command_show(command_t *cmd);
 extern void 		command_pop_to_next(command_t **cmd);
 extern void 		command_remove(command_t **cmd, command_t *to_remove);

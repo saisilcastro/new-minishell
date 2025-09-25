@@ -2,7 +2,7 @@
 
 void	echo(minishell_t *set, int fd) {
 	status_e	new_line;
-	char		end_line;
+	char		endline;
 
 	if (!set->cmd->right || !*(set->cmd->right->value)) {
 		printf("\n");
