@@ -19,7 +19,7 @@ extern void			variable_extract(variable_t **var, char *line);
 extern variable_t	*variable_select(variable_t *var, char *name);
 extern char			*variable_name_by_line(char **line);
 extern size_t		variable_value_size_by_line(char **line);
-extern void			variable_show(variable_t *var);
+extern void			variable_show(variable_t *var, int fd);
 extern void			variable_show_tree(variable_t *var);
 extern void			variable_export(variable_t *var);
 extern void			variable_remove(variable_t **root, variable_t *to_remove);

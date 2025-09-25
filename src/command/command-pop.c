@@ -6,7 +6,7 @@ void command_pop_to_next(command_t **cmd) {
 
 	next_command = Off;
 	while (!next_command && *cmd) {
-		next = (*cmd)->next;
+		next = (*cmd)->right;
 		//printf("{%s}%s", (*cmd)->value, special_checker(*(*cmd)->value) ? "\n" : " ");
 		if (special_checker(*(*cmd)->value) && (special_checker(*(*cmd)->value + 1) || has_space(*(*cmd)->value + 1) || *((*cmd)->value + 1) == '\0'))
 			next_command = On;
@@ -21,14 +21,14 @@ void command_remove(command_t **cmd, command_t *to_remove) {
 	if (!cmd || !*cmd || !to_remove)
 		return;
 	if (*cmd == to_remove) {
-		*cmd = to_remove->next;
+		*cmd = to_remove->right;
 		if (*cmd)
-			(*cmd)->prev = NULL;
+			(*cmd)->left = NULL;
 	} else {
-		if (to_remove->prev)
-			to_remove->prev->next = to_remove->next;
-		if (to_remove->next)
-			to_remove->next->prev = to_remove->prev;
+		if (to_remove->left)
+			to_remove->left->right = to_remove->right;
+		if (to_remove->right)
+			to_remove->right->left = to_remove->left;
 	}
 
 	if (to_remove->value)
@@ -49,7 +49,7 @@ void command_pop(command_t **root) {
 	command_t	*next;
 
 	while (*root) {
-		next = (*root)->next;
+		next = (*root)->right;
 		if ((*root)->value)
 			free((*root)->value);
 		free(*root);

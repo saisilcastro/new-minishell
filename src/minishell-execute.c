@@ -9,5 +9,5 @@ void minishell_execute(minishell_t *set) {
 	index = has_builtin(set->cmd->value);
 	size = sizeof(set->buildin) / sizeof(set->buildin[0]);
 	if (index >= 0 && index < size)
-		set->buildin[index](set);
+		set->buildin[index](set, 0);
 }

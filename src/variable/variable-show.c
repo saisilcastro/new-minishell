@@ -1,7 +1,7 @@
 #include <variable.h>
 #include <stdio.h>
 
-void variable_show(variable_t *var) {
+void variable_show(variable_t *var, int fd) {
 	variable_t	*cur;
 
 	cur = var;

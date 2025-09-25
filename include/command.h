@@ -11,7 +11,7 @@ typedef struct minishell_s minishell_t;
 typedef struct command_s command_t;
 struct command_s{
 	char		*value;
-	command_t	*prev, *next;
+	command_t	*left, *right;
 };
 
 extern command_t 	*command_push(char *value);

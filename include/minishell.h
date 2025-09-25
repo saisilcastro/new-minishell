@@ -18,7 +18,7 @@ struct minishell_s {
 	command_t	*cmd;
 	char		*home;
 	status_e	run;
-	void (*buildin[7])(minishell_t *cmd);
+	void (*buildin[7])(minishell_t *cmd, int fd);
 };
 
 extern void path_break(command_t **cmd, char *line);
@@ -27,13 +27,13 @@ extern void path_break(command_t **cmd, char *line);
 extern void	shell_ctrl_c(int signal);
 
 // built-ins
-extern void	echo(minishell_t *set);
-extern void cd(minishell_t *set);
-extern void	pwd(minishell_t *set);
-extern void	export(minishell_t *set);
-extern void unset(minishell_t *set);
-extern void env(minishell_t *set);
-extern void quit(minishell_t *set);
+extern void	echo(minishell_t *set, int fd);
+extern void cd(minishell_t *set, int fd);
+extern void	pwd(minishell_t *set, int fd);
+extern void	export(minishell_t *set, int fd);
+extern void unset(minishell_t *set, int fd);
+extern void env(minishell_t *set, int fd);
+extern void quit(minishell_t *set, int fd);
 
 extern minishell_t *minishell_get(void);
 extern void minishell_set(minishell_t *set);

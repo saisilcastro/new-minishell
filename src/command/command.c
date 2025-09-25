@@ -7,7 +7,7 @@ command_t *command_push(char *value) {
     set->value = NULL;
     if (value)
 	    set->value = strdup(value);
-	set->prev = set->next = NULL;
+	set->left = set->right = NULL;
 	return set;
 }
 
@@ -16,8 +16,8 @@ void    command_next_first(command_t **root, command_t *set) {
         *root = set;
         return ;
     }
-    set->next = *root;
-    (*root)->prev = set;
+    set->right = *root;
+    (*root)->left = set;
     *root = set;
 }
 
@@ -31,8 +31,8 @@ void    command_next_last(command_t **root, command_t *set) {
         return ;
     }
     cur = *root;
-    while (cur->next)
-        cur = cur->next;
-    set->prev = cur;
-    cur->next = set;
+    while (cur->right)
+        cur = cur->right;
+    set->left = cur;
+    cur->right = set;
 }

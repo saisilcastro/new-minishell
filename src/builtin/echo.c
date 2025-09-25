@@ -1,21 +1,27 @@
 #include <minishell.h>
 
-void	echo(minishell_t *set) {
+void	echo(minishell_t *set, int fd) {
 	status_e	new_line;
+	char		end_line;
 
-	if (!set->cmd->next || !*(set->cmd->next->value)) {
+	if (!set->cmd->right || !*(set->cmd->right->value)) {
 		printf("\n");
 		return ;
 	}
 	new_line = On;
-	command_t	*cmd = set->cmd->next;
+	endline = '\n';
+	command_t	*cmd = set->cmd->right;
 	while (cmd && !special_checker(*cmd->value)) {
 		if (cmd->value && *cmd->value) {
-			if (cmd->next)
-				printf("%s%c\n", cmd->value, ' ');
+			if (cmd->right){
+				if (!special_checker(*cmd->right->value))
+					printf("%s%c", cmd->value, ' ');
+				else
+					printf("%s%c", cmd->value, endline);	
+			}
 			else
-				printf("%s%c\n", cmd->value, '\n');
+				printf("%s%c", cmd->value, endline);
 		}
-		cmd = cmd->next;
+		cmd = cmd->right;
 	}
 }

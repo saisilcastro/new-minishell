@@ -20,6 +20,6 @@ variable_t	*command_select_by_name(variable_t *var, char *line) {
 void	command_show(command_t *cmd) {
 	while (cmd) {
 		printf("{%s}\n", cmd->value);
-		cmd = cmd->next;
+		cmd = cmd->right;
 	}
 }

@@ -11,12 +11,12 @@ static inline void	change_dir(char *dir) {
 	variable_change(&minishell_get()->var, "PWD", path);
 }
 
-void	cd(minishell_t *set) {
+void	cd(minishell_t *set, int fd) {
 	if (!set->cmd)
 		return;
-	if (!set->cmd->next) {
+	if (!set->cmd->right) {
 		change_dir(set->home);
 		return ;
 	}
-	change_dir(set->cmd->next->value);
+	change_dir(set->cmd->right->value);
 }

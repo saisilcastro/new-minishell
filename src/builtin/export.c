@@ -6,30 +6,30 @@ static inline char	*value_get(command_t *var) {
 
 	end = 0;
 	value = NULL;
-	if (var->next) {
-		if (*var->next->value == '\'' || *var->next->value == '\"') {
-			value = &*(var->next->value + 1);
+	if (var->right) {
+		if (*var->right->value == '\'' || *var->right->value == '\"') {
+			value = &*(var->right->value + 1);
 			end = strlen(value) - 1;
 			if (*(value + end) == '\'' || *(value + end) == '\"')
 				*(value + end) = '\0';
 		}
 		else
-			value = var->next->value;
+			value = var->right->value;
 	}
 	return value;
 }
 
-void	export(minishell_t *set) {
+void	export(minishell_t *set, int fd) {
 	command_t	*cmd;
 	command_t	*var;
 	char		*value;
 
-	if (set->cmd && !set->cmd->next) {
+	if (set->cmd && !set->cmd->right) {
 		variable_export(set->var);
 		return;
 	}
 	var = NULL;
-	cmd = set->cmd->next;
+	cmd = set->cmd->right;
 	while (cmd) {
 		command_break(&var, cmd->value, '=');
 		if (var) {
@@ -40,6 +40,6 @@ void	export(minishell_t *set) {
 				variable_change(&set->var, var->value, value);
 			command_pop(&var);
 		}
-		cmd = cmd->next;
+		cmd = cmd->right;
 	}
 }
