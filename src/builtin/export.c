@@ -7,10 +7,10 @@ static inline char	*value_get(command_t *var) {
 	end = 0;
 	value = NULL;
 	if (var->right) {
-		if (*var->right->value == '\'' || *var->right->value == '\"') {
+		if (special_checker(*var->right->value) == 1) {
 			value = &*(var->right->value + 1);
 			end = strlen(value) - 1;
-			if (*(value + end) == '\'' || *(value + end) == '\"')
+			if (special_checker(*value + end) == 1)
 				*(value + end) = '\0';
 		}
 		else
@@ -19,27 +19,41 @@ static inline char	*value_get(command_t *var) {
 	return value;
 }
 
-void	export(minishell_t *set, int fd) {
-	command_t	*cmd;
-	command_t	*var;
-	char		*value;
+void	variable_apply(minishell_t *set, char *name, char *value) {
+	if (!variable_select(set->var, name)) {
+		if (!strncmp(name, "PATH", 4)) {
+			command_pop(&set->path);
+			command_break(&set->path, value, ':');
+		}
+		variable_next_last(&set->var, variable_push(name, value));
+	}
+	else {
+		if (!strncmp(name, "PATH", 4) && value) {
+			command_pop(&set->path);
+			command_break(&set->path, value, ':');
+		}
+		variable_change(&set->var, name, value);
+	}
+}
 
-	if (set->cmd && !set->cmd->right) {
-		variable_export(set->var);
+void	export(char **command, int fd) {
+	minishell_t	*set;
+	command_t	*var;
+	char		**cmd;
+
+	set = minishell_get();
+	if (*command && !*(command + 1)) {
+		variable_export(set->var, fd);
 		return;
 	}
 	var = NULL;
-	cmd = set->cmd->right;
-	while (cmd) {
-		command_break(&var, cmd->value, '=');
+	cmd = command + 1;
+	while (*cmd) {
+		command_break(&var, *cmd, '=');
 		if (var) {
-			value = value_get(var);
-			if (!variable_select(set->var, var->value))
-				variable_next_last(&set->var, variable_push(var->value, value));
-			else
-				variable_change(&set->var, var->value, value);
+			variable_apply(set, var->value, value_get(var));
 			command_pop(&var);
 		}
-		cmd = cmd->right;
+		cmd++;
 	}
 }

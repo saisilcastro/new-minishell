@@ -1,8 +1,10 @@
 #include <minishell.h>
 
-void	pwd(minishell_t *set, int fd) {
+void	pwd(char **command, int fd) {
 	char	path[PATH_MAX];
 
-	if (getcwd(path, sizeof(path)))
-		printf("%s\n",path);
+	if (getcwd(path, sizeof(path))) {
+		string_fd(path, fd);
+		string_fd("\n", fd);
+	}
 }

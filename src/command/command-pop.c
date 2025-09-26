@@ -1,20 +1,28 @@
 #include <command.h>
 
-void command_pop_to_next(command_t **cmd) {
+char	**command_pop_to_next(command_t **cmd) {
+	char		**command;
 	command_t	*next;
-	status_e	next_command;
+	int			i;
 
-	next_command = Off;
-	while (!next_command && *cmd) {
+	if (!(command = malloc(command_counter(*cmd) * sizeof(char*))))
+		return NULL;
+	i = 0;
+	while (*cmd) {
 		next = (*cmd)->right;
-		//printf("{%s}%s", (*cmd)->value, special_checker(*(*cmd)->value) ? "\n" : " ");
-		if (special_checker(*(*cmd)->value) && (special_checker(*(*cmd)->value + 1) || has_space(*(*cmd)->value + 1) || *((*cmd)->value + 1) == '\0'))
-			next_command = On;
-		if ((*cmd)->value)
-			free((*cmd)->value);
-		free(*cmd);
+		if (special_checker(*(*cmd)->value)) {
+			command_pop_one(cmd);
+			next->left = NULL;
+			*cmd = next;
+			*(command + i) = NULL;
+			return command;
+		}
+		*(command + i++) = strdup((*cmd)->value);
+		command_pop_one(cmd);
 		*cmd = next;
 	}
+	*(command + i) = NULL;
+	return command;
 }
 
 void command_remove(command_t **cmd, command_t *to_remove) {
@@ -38,6 +46,7 @@ void command_remove(command_t **cmd, command_t *to_remove) {
 }
 
 void command_pop_one(command_t **cmd) {
+	if (!cmd || !*cmd)
 		return;
 	if ((*cmd)->value)
 		free((*cmd)->value);

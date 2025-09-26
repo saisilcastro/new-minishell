@@ -17,25 +17,26 @@ void minishell_function(minishell_t *set) {
 
 void minishell_set(minishell_t *set) {
 	variable_t	*cur = NULL;
+	variable_t	*next;
+
 	while (*__environ) {
 		variable_extract(&cur, *__environ);
 		*__environ++;
 	}
 	variable_next_first(&set->var, variable_push("OLDPWD", NULL));
 	while (cur) {
-		variable_t	*next = cur->right;
+		next = cur->right;
 		variable_next_first(&set->var, variable_push(cur->name, cur->value));
 		if (cur->name)free(cur->name);
 		if (cur->value)free(cur->value);
 		free(cur);
 		cur = next;
 	}
-	cur = variable_select(set->var, "PATH");
-	if (cur)
+	if ((cur = variable_select(set->var, "PATH")))
 		command_break(&set->path, cur->value, ':');
-	set->run = On;
 	cur = variable_select(set->var, "HOME");
 	set->home = strdup(cur->value);
+	set->output = STDOUT_FILENO;
 	minishell_function(set);
 }
 
@@ -52,7 +53,7 @@ void minishell_loop(minishell_t *set) {
 	char *line;
 
 	set->cmd = NULL;
-	while (set->run) {
+	while (!set->exit) {
 		//signal(SIGINT, shell_ctrl_c);
 		line = readline("> ");
 		if (is_command_empty(&line))
@@ -61,10 +62,9 @@ void minishell_loop(minishell_t *set) {
 		command_parse(set, line);
 		if (line && *line)
 			free(line);
-		while (set->cmd) {
-			minishell_execute(set);
-			command_pop_to_next(&set->cmd);
-		}
+		minishell_execute(set);
+		process_finish(set->process);
+		process_pop(&set->process);
 	}
 	minishell_pop(set);
 }

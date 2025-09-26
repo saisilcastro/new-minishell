@@ -17,6 +17,7 @@ struct command_s{
 extern command_t 	*command_push(char *value);
 extern void			command_next_first(command_t **root, command_t *next);
 extern void 		command_next_last(command_t **root, command_t *next);
+extern size_t		command_counter(command_t *cmd);
 extern variable_t	*command_select_by_name(variable_t *var, char *line);
 extern void			command_break(command_t **cmd, char *line, char byte);
 extern void			command_parse(minishell_t *set, char *line);
@@ -25,8 +26,8 @@ extern int			command_apostrophe(char **line, char **value);
 extern int			command_quote(char **line, char **value);
 extern int			command_normal(char **line, char **value);
 extern int			command_special(char **line, char **value);
-extern void			command_show(command_t *cmd);
-extern void 		command_pop_to_next(command_t **cmd);
+extern void			command_show(command_t *cmd, int fd);
+extern char 		**command_pop_to_next(command_t **cmd);
 extern void 		command_remove(command_t **cmd, command_t *to_remove);
 extern void 		command_pop_one(command_t **cmd);
 extern void 		command_pop(command_t **root);

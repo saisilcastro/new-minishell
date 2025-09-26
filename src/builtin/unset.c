@@ -1,16 +1,16 @@
 #include <minishell.h>
 
-void	unset(minishell_t *set, int fd) {
-	command_t	*cmd;
+void	unset(char **command, int fd) {
+	char		**cmd;
 	variable_t	*to_remove;
 
-	if (!set->cmd || !set->cmd->right)
+	if (!*command || !*(command + 1))
 		return ;
-	cmd = set->cmd->right;
-	while (cmd) {
-		to_remove = variable_select(set->var, cmd->value);
+	cmd = command + 1;
+	while (*cmd) {
+		to_remove = variable_select(minishell_get()->var, *cmd);
 		if (to_remove)
-			variable_remove(&set->var, to_remove);
-		cmd = cmd->right;
+			variable_remove(&minishell_get()->var, to_remove);
+		cmd++;
 	}
 }

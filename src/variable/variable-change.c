@@ -9,7 +9,7 @@ void         variable_change(variable_t **root, char *name, char *value) {
 		free(to_change->value);
 		if (value)
 			to_change->value = strdup(value);
-		else
+		else 
 			to_change->value = NULL;
 	}
 }

@@ -1,5 +1,5 @@
 #include <minishell.h>
 
-void	quit(minishell_t *set, int fd) {
-	set->run = Off;
+void	quit(char **command, int fd) {
+	minishell_get()->exit = On;
 }

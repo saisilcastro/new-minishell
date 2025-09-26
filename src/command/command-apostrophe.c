@@ -7,10 +7,10 @@ static inline char	*command_apostrophe_buffer(char **line) {
 	size_t	size;
 
 	begin = (++*line);
-	while (*(*line) && *(*line) != '\'')
+	while (**line && **line != '\'')
 		*(*line)++;
 	size = *line - begin;
-	if (*(*line) == '\'')
+	if (**line == '\'')
 		*(*line)++;
 	if (!(buffer = malloc((size + 1) * sizeof(char))))
 		return *line;
@@ -27,7 +27,7 @@ int	command_apostrophe(char **line, char **value) {
 		return -1;
 	string_append(value, piece);
 	free(piece);
-	if (!*(*line) || has_space(*(*line))) {
+	if (!**line || has_space(**line)) {
         command_next_last(&minishell_get()->cmd, command_push(*value));
 		free(*value);
 		*value = NULL;

@@ -10,30 +10,35 @@
 #include <variable.h>
 #include <util.h>
 #include <command.h>
+#include <process.h>
+
+extern void 	string_append(char **dest, const char *s2);
+extern void		string_fd(char *str, int fd);
 
 typedef struct minishell_s minishell_t;
 struct minishell_s {
 	variable_t	*var;
 	command_t	*path;
 	command_t	*cmd;
+	process_t	*process;
 	char		*home;
-	status_e	run;
-	void (*buildin[7])(minishell_t *cmd, int fd);
+	status_e	exit;
+	int			output;
+	int			status;
+	void (*buildin[7])(char **cmd, int fd);
 };
-
-extern void path_break(command_t **cmd, char *line);
 
 // signal
 extern void	shell_ctrl_c(int signal);
 
 // built-ins
-extern void	echo(minishell_t *set, int fd);
-extern void cd(minishell_t *set, int fd);
-extern void	pwd(minishell_t *set, int fd);
-extern void	export(minishell_t *set, int fd);
-extern void unset(minishell_t *set, int fd);
-extern void env(minishell_t *set, int fd);
-extern void quit(minishell_t *set, int fd);
+extern void	echo(char **cmd, int fd);
+extern void cd(char **cmd, int fd);
+extern void	pwd(char **cmd, int fd);
+extern void	export(char **cmd, int fd);
+extern void unset(char **cmd, int fd);
+extern void env(char **cmd, int fd);
+extern void quit(char **cmd, int fd);
 
 extern minishell_t *minishell_get(void);
 extern void minishell_set(minishell_t *set);

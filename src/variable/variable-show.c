@@ -1,3 +1,4 @@
+#include <minishell.h>
 #include <variable.h>
 #include <stdio.h>
 
@@ -6,13 +7,17 @@ void variable_show(variable_t *var, int fd) {
 
 	cur = var;
 	while (cur) {
-		if (cur->value)
-			printf("%s=%s\n", cur->name, cur->value);
+		if (cur->value) {
+			string_fd(cur->name, fd);
+			string_fd("=", fd);
+			string_fd(cur->value, fd);
+			string_fd("\n", fd);
+		}
 		cur = cur->right;
 	}
 }
 
-void variable_export(variable_t *var) {
+void variable_export(variable_t *var, int fd) {
 	variable_t	*cur;
 	variable_t	*sorted;
 
@@ -22,6 +27,6 @@ void variable_export(variable_t *var) {
 		variable_next(&sorted, variable_push(cur->name, cur->value));
 		cur = cur->right;
 	}
-	variable_show_tree(sorted);
+	variable_show_tree(sorted, fd);
 	variable_pop_tree(&sorted, variable_pop_one);
 }

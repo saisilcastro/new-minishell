@@ -1,0 +1,62 @@
+#!/bin/bash
+
+# Script para instalar o binário Neovim 0.10.0, criando o link direto 'nvim'.
+# Executar como ROOT.
+
+# --- Configurações ---
+NVIM_VERSION="v0.10.0"
+INSTALL_DIR="/opt/nvim-${NVIM_VERSION}"
+# O link final será o nome do comando que você quer: 'nvim'
+LINK_NAME="/usr/local/bin/nvim"
+TEMP_ARCHIVE="nvim-linux64.tar.gz"
+
+echo "--- Iniciando a instalação do Neovim ${NVIM_VERSION} ---"
+
+# 1. Checa e remove o link 'nvim' se ele já existir
+if [ -f "${LINK_NAME}" ]; then
+    echo "AVISO: Removendo o link antigo em ${LINK_NAME}..."
+    rm -f "${LINK_NAME}"
+fi
+
+# 2. Define o diretório de trabalho temporário
+BUILD_DIR=$(mktemp -d)
+cd "${BUILD_DIR}" || exit 1
+
+# 3. Baixa o arquivo tar.gz da release 0.10.0
+echo "1/4: Baixando Neovim ${NVIM_VERSION}..."
+wget "https://github.com/neovim/neovim/releases/download/${NVIM_VERSION}/${TEMP_ARCHIVE}" -O "${TEMP_ARCHIVE}"
+
+if [ $? -ne 0 ]; then
+    echo "ERRO: Falha ao baixar o arquivo. Verifique a conexão."
+    rm -rf "${BUILD_DIR}"
+    exit 1
+fi
+
+# 4. Descompacta o binário
+echo "2/4: Descompactando arquivos..."
+tar -xzf "${TEMP_ARCHIVE}"
+
+# 5. Instala no diretório /opt/
+echo "3/4: Instalando em ${INSTALL_DIR}..."
+
+# Remove qualquer instalação anterior neste local
+if [ -d "${INSTALL_DIR}" ]; then
+    rm -rf "${INSTALL_DIR}"
+fi
+
+# Move a pasta descompactada para /opt/
+mv nvim-linux64 "${INSTALL_DIR}"
+
+# 6. Cria o link simbólico para que 'nvim' aponte para a nova versão
+echo "4/4: Criando link simbólico ${LINK_NAME}..."
+ln -sf "${INSTALL_DIR}/bin/nvim" "${LINK_NAME}"
+
+# 7. Limpeza e Verificação
+rm -rf "${BUILD_DIR}"
+echo "--- Instalação Concluída! ---"
+
+# Confirma a versão instalada
+echo "Versão instalada:"
+nvim --version | head -n 1
+
+echo "O comando 'nvim' agora roda a versão ${NVIM_VERSION}."

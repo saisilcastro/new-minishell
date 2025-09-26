@@ -1,3 +1,4 @@
+#include <minishell.h>
 #include <command.h>
 
 variable_t	*command_select_by_name(variable_t *var, char *line) {
@@ -17,9 +18,11 @@ variable_t	*command_select_by_name(variable_t *var, char *line) {
 	return to_expand;
 }
 
-void	command_show(command_t *cmd) {
+void	command_show(command_t *cmd, int fd) {
 	while (cmd) {
-		printf("{%s}\n", cmd->value);
+		string_fd("{", fd);
+		string_fd(cmd->value, fd);
+		string_fd("}\n", fd);
 		cmd = cmd->right;
 	}
 }

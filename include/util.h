@@ -10,6 +10,5 @@ extern status_e has_space(char);
 extern void		space_skip(char **line);
 extern int		special_checker(char byte);
 extern int		has_builtin(char *s);
-extern void 	string_append(char **dest, const char *s2);
 
 #endif

@@ -1,6 +1,6 @@
+#include <minishell.h>
 #include <variable.h>
 #include <string.h>
-#include <stdio.h>
 
 void variable_next(variable_t **root, variable_t *next) {
 	if (!*root) {
@@ -24,15 +24,23 @@ variable_t	*variable_select_tree(variable_t *var, char *name) {
 	return variable_select_tree(var->right, name);
 }
 
-void variable_show_tree(variable_t *var) {
+void variable_show_tree(variable_t *var, int fd) {
 	if (!var)
 		return;
-	variable_show_tree(var->left);
-	if (var->value)
-		printf("declare -x %s=\"%s\"\n", var->name, var->value);
-	else
-		printf("declare -x %s\n", var->name);
-	variable_show_tree(var->right);
+	variable_show_tree(var->left, fd);
+	if (var->value) {
+		string_fd("declare -x ", fd);
+		string_fd(var->name, fd);
+		string_fd("=\"", fd);
+		string_fd(var->value, fd);
+		string_fd("\"\n", fd);
+	}
+	else {
+		string_fd("declare -x ", fd);
+		string_fd(var->name, fd);
+		string_fd("\n", fd);
+	}
+	variable_show_tree(var->right, fd);
 }
 
 void variable_pop_tree(variable_t **root, void (*pop)(void *)) {

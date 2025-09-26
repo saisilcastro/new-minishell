@@ -28,7 +28,7 @@ size_t	variable_value_size_by_line(char **line) {
 	name = variable_name_by_line(line);
 	var = variable_select(minishell_get()->var, name);
 	free(name);
-	if (var)
+	if (var && var->value)
 		return strlen(var->value);
 	return 0;
 }

@@ -30,13 +30,13 @@ static inline char *command_quote_buffer(char **line) {
 	if (!(buffer = malloc((size + 1) * sizeof(char))))
 		return NULL;
 	pointer = buffer;
-	while (*(*line) && *(*line) != '"') {
-		if (*(*line) == '$') {
+	while (**line && **line != '"') {
+		if (**line == '$') {
 			name = variable_name_by_line(line);
 			var = variable_select(minishell_get()->var, name);
 			free(name);
 			name = NULL;
-			if (var) {
+			if (var && var->value) {
 				memcpy(pointer, var->value, strlen(var->value));
 				pointer += strlen(var->value);
 			}
@@ -45,7 +45,7 @@ static inline char *command_quote_buffer(char **line) {
 			*pointer++ = *(*line)++;
 	}
 	*(buffer + size) = '\0';
-	if (*(*line) == '"')
+	if (**line == '"')
 		*(*line)++;
 	return buffer;
 }
@@ -58,7 +58,7 @@ int	command_quote(char **line, char **value) {
 		return -1;
 	string_append(value, piece);
 	free(piece);
-	if (!*(*line) || has_space(*(*line))) {
+	if (!**line || has_space(**line)) {
         command_next_last(&minishell_get()->cmd, command_push(*value));
 		free(*value);
 		*value = NULL;
